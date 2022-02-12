@@ -10,8 +10,15 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use('/api/places', placesRoutes);
+app.use((req, res, next)=> {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
 
+    next()
+});
+
+app.use('/api/places', placesRoutes);
 app.use('/api/users', usersRoutes);
 
 
@@ -33,9 +40,10 @@ app.use((error, req, res, next) => {
 })
 
 mongoose
-    .connect('mongodb+srv://user-places:rGEdMnsrHkZw9Dr4@cluster0.4tyhn.mongodb.net/places?retryWrites=true&w=majority')
+    .connect('mongodb+srv://user-places:rGEdMnsrHkZw9Dr4@cluster0.4tyhn.mongodb.net/mern?retryWrites=true&w=majority')
     .then(() => {
         app.listen(5000);
+        console.log('Listening on http://localhost:5000');
     })
     .catch((err)=>{
         console.log(err)
